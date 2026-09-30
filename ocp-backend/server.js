@@ -23,13 +23,18 @@ app.use("/api/pannes", pannesRoutes);
 app.use("/api/historique", historiqueRoutes);
 app.use("/api/mouvements", mouvementsRoutes);
 
-// Gestion d'erreur générique (filet de sécurité)
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ erreur: "Erreur serveur." });
 });
 
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`API OCP moteurs démarrée sur http://localhost:${PORT}`);
-});
+// En local (node server.js) : on démarre un vrai serveur.
+// Sur Vercel : on exporte juste "app", Vercel s'occupe du reste.
+if (require.main === module) {
+  const PORT = process.env.PORT || 4000;
+  app.listen(PORT, () => {
+    console.log(`API OCP moteurs démarrée sur http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
